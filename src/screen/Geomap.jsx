@@ -13,8 +13,8 @@ import { FaMap } from "react-icons/fa";
 import { Button, message } from "antd";
 import "leaflet-defaulticon-compatibility";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
-
-const DEFAULT_EMPLOYEE_POSITION = [7.826249, 123.447];
+import { useCatchLocation } from "../services/Geofence/geoQuery";
+import { useUpdateLocation } from "../services/Geofence/geoMutation";
 
 function getDistanceInMeters(from, to) {
   const earthRadiusInMeters = 6371000;
@@ -54,16 +54,22 @@ function Geomap() {
   const [loading, setLoading] = useState(true);
   const [hide, setHide] = useState(false);
 
-  useEffect(() => {
-    const fetchLocation = async () => {
-      setEmployeePosition(DEFAULT_EMPLOYEE_POSITION);
-      setLoading(false);
-    };
+  const { data: loadLocation, isLoading } = useCatchLocation();
+  const updateLoc = useUpdateLocation();
 
-    fetchLocation();
-    const interval = setInterval(fetchLocation, 5000);
-    return () => clearInterval(interval);
-  }, []);
+  const DEFAULT_EMPLOYEE_POSITION = [7.832872, 123.4483];
+
+  useEffect(() => {
+    const location = loadLocation?.[0]; // or whatever item you need
+
+    if (location?.latitude != null && location?.longitude != null) {
+      setEmployeePosition([location.latitude, location.longitude]);
+    } else {
+      setEmployeePosition(DEFAULT_EMPLOYEE_POSITION);
+    }
+
+    setLoading(false);
+  }, [loadLocation]);
 
   const allowedMeters = Math.max(100 || 0, 0); //Math.max(Number(meters) || 0, 0);
   const hasRadius = allowedMeters > 0;
@@ -82,12 +88,26 @@ function Geomap() {
     } else if (contactno.length === 0) {
       message.error("Contactno is required");
     } else {
-      let data = { number: contactno, name: employeeId };
-      console.log(data);
+      let data = {
+        phone_number: contactno,
+        device_id: employeeId,
+        latitude: basePosition[0].toFixed(6),
+        longitude: basePosition[1].toFixed(6),
+      };
+      updateLoc.mutate(data, {
+        onSettled: () => {
+          setContactno("");
+          setEmployeeId("");
+        },
+      });
     }
   };
 
   if (loading || !employeePosition) {
+    return <div className="map-loading">Loading map...</div>;
+  }
+
+  if (isLoading) {
     return <div className="map-loading">Loading map...</div>;
   }
 
@@ -100,6 +120,7 @@ function Geomap() {
             <input
               name="employeeId"
               type="text"
+              maxLength={90}
               value={employeeId}
               onChange={(event) => setEmployeeId(event.target.value)}
               placeholder="Guardian Name"
@@ -109,7 +130,8 @@ function Geomap() {
             Mobile Number
             <input
               name="contactno"
-              type="number"
+              type="tel"
+              maxLength={11}
               value={contactno}
               onChange={(event) => setContactno(event.target.value)}
               placeholder="Mobile Number"
