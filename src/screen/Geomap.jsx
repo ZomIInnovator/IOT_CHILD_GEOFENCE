@@ -249,7 +249,7 @@ function Geomap() {
 
         <Marker position={employeePosition}>
           <Popup>
-            Employee {employeeId || "Location"}
+            Child {employeeId || "Location"}
             <br />
             Lat: {employeePosition[0]}
             <br />
