@@ -1,16 +1,16 @@
 import { Flex, Form, Button, Input } from "antd";
-import { UserOutlined, LockOutlined } from "@ant-design/icons";
+import { UserOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-import { useLogin } from "../services/Auth/authMutation";
+import { useAccess } from "../services/Auth/authMutation";
 
-const AuthLogin = () => {
-  const navigate = useNavigate();
+const AuthAccessCode = () => {
   const [form] = Form.useForm();
+  const navigate = useNavigate();
 
-  const { mutateLogin, isLoadingLogin } = useLogin();
+  const { mutateAccess, isLoadingAccess } = useAccess();
 
   const onFinish = async (values) => {
-    mutateLogin(values, {
+    mutateAccess(values.code, {
       onSuccess: () => {
         form.resetFields();
       },
@@ -20,12 +20,12 @@ const AuthLogin = () => {
   return (
     <Flex className="flex flex-col justify-center-safe items-center h-screen w-screen gap-2.5 bg-gray-100">
       <div>
-        <p className="text-3xl">AUTHENTICATION</p>
+        <p className="text-3xl">LOGIN ACCESS CODE</p>
       </div>
       <div className="px-5">
         <p className="text-center font-mono sm:text-sm md:text-base lg:text-lg">
-          Please enter your username and password to log in. If you don't have
-          an account, please contact the administrator to create one for you.
+          Please enter access code to log in. If you don't have an access code,
+          please contact the administrator to create one for you.
         </p>
       </div>
       <div className="bg-amber-100 px-4 rounded-2xl">
@@ -37,30 +37,16 @@ const AuthLogin = () => {
           onFinish={onFinish}
         >
           <Form.Item
-            label="Email Address"
-            name="email"
+            label="Enter Access Code"
+            name="code"
             rules={[
               {
                 required: true,
-                message: "Please enter your email address",
+                message: "Please enter your access code",
               },
             ]}
           >
-            <Input
-              prefix={<UserOutlined />}
-              placeholder="Enter your email address"
-            />
-          </Form.Item>
-
-          <Form.Item
-            label="Password"
-            name="password"
-            rules={[{ required: true, message: "Please enter your password" }]}
-          >
-            <Input.Password
-              prefix={<LockOutlined />}
-              placeholder="Enter your password"
-            />
+            <Input prefix={<UserOutlined />} placeholder="Enter code here" />
           </Form.Item>
 
           <Form.Item className="mb-3">
@@ -73,15 +59,15 @@ const AuthLogin = () => {
                 color: "white",
                 fontWeight: "bold",
               }}
-              disabled={isLoadingLogin}
+              disabled={isLoadingAccess}
             >
-              Login
+              Verify Code
             </Button>
             <Button
               type="default"
               block
               onClick={() => {
-                navigate("/");
+                navigate("/landing");
               }}
               style={{
                 marginTop: "10px",
@@ -98,4 +84,4 @@ const AuthLogin = () => {
   );
 };
 
-export default AuthLogin;
+export default AuthAccessCode;

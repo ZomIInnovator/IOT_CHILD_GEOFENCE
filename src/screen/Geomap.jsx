@@ -10,7 +10,7 @@ import {
 import "leaflet/dist/leaflet.css";
 import "../App.css";
 import { FaMap, FaHouseUser } from "react-icons/fa";
-import { Button } from "antd";
+import { Button, message } from "antd";
 
 const DEFAULT_EMPLOYEE_POSITION = [7.826249, 123.447];
 //const SMS_RECIPIENT_NUMBER = "09530769905";
@@ -49,7 +49,7 @@ function Geomap() {
   const [basePosition, setBasePosition] = useState(null);
   const [employeeId, setEmployeeId] = useState("");
   const [contactno, setContactno] = useState("");
-  const [meters, setMeters] = useState(100);
+  //const [meters, setMeters] = useState(100);
   const [loading, setLoading] = useState(true);
   const [hide, setHide] = useState(false);
 
@@ -64,7 +64,7 @@ function Geomap() {
     return () => clearInterval(interval);
   }, []);
 
-  const allowedMeters = Math.max(Number(meters) || 0, 0);
+  const allowedMeters = Math.max(100 || 0, 0); //Math.max(Number(meters) || 0, 0);
   const hasRadius = allowedMeters > 0;
   const distanceFromBase = useMemo(() => {
     if (!basePosition || !employeePosition) return null;
@@ -74,6 +74,17 @@ function Geomap() {
 
   const isOutsideCircle =
     distanceFromBase !== null && hasRadius && distanceFromBase > allowedMeters;
+
+  const saveUpdate = () => {
+    if (employeeId.length === 0) {
+      message.error("Guardian name is required");
+    } else if (contactno.length === 0) {
+      message.error("Contactno is required");
+    } else {
+      let data = { number: contactno, name: employeeId };
+      console.log(data);
+    }
+  };
 
   if (loading || !employeePosition) {
     return <div className="map-loading">Loading map...</div>;
@@ -103,7 +114,7 @@ function Geomap() {
               placeholder="Mobile Number"
             />
           </label>
-          <label>
+          {/* <label>
             Meters
             <input
               name="meters"
@@ -111,14 +122,14 @@ function Geomap() {
               min="1"
               value={meters}
               onChange={(e) => setMeters(e.target.value)}
-              placeholder="Employee ID"
+              disabled
             />
-          </label>
+          </label> */}
           <Button
             type="default"
             block
             onClick={() => {
-              setHide(false);
+              saveUpdate();
             }}
             style={{
               marginTop: "10px",
@@ -175,10 +186,10 @@ function Geomap() {
               <FaMap />
               <p>Google Map Form</p>
             </div>
-            <div className="flex items-center gap-1.5 bg-red-300 py-2 px-2 rounded-2xl">
+            {/* <div className="flex items-center gap-1.5 bg-red-300 py-2 px-2 rounded-2xl">
               <FaHouseUser size={15} />
               <p className="text-black text-sm">Logout</p>
-            </div>
+            </div> */}
           </div>
         </section>
       )}

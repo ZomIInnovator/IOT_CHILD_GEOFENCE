@@ -9,6 +9,19 @@ export async function apiLogin(userData) {
   return data;
 }
 
+export async function apiAccess(code) {
+  let { data, error } = await supabase
+    .from("tblaccesscode")
+    .select("*")
+    .eq("xcode", code);
+
+  if (error) {
+    throw new Error(error);
+  }
+
+  return data;
+}
+
 export async function apiSignUp({
   email,
   password,

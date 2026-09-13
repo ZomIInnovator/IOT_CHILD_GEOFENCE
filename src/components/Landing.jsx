@@ -39,10 +39,10 @@ const Landing = () => {
                 size="large"
                 color="red"
                 icon={<LoginOutlined />}
-                onClick={() => navigate("/auth")}
+                onClick={() => navigate("/map")}
                 className="mt-4 ml-4"
               >
-                ACCESS CODE
+                TRACKER MAP
               </Button>
             </Col>
           </Row>

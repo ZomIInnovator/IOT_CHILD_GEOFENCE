@@ -2,6 +2,7 @@ import { Flex, Menu } from "antd";
 import { GrMapLocation, GrDashboard, GrUser } from "react-icons/gr";
 import { useNavigate } from "react-router-dom";
 
+
 function getItem(label, key, icon, children) {
   return {
     key,
@@ -18,7 +19,8 @@ const SidebarMenu = () => {
 
     getItem("Manage", "/ta-container", <GrUser />, [
       getItem("Guardian", "/records"),
-      getItem("System User", "/ta-request-draft"),
+      getItem("Signup", "/register"),
+      getItem("System User", "/sysuser"),
     ]),
   ];
 
