@@ -9,7 +9,7 @@ import {
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import "../App.css";
-import { FaMap, FaHouseUser } from "react-icons/fa";
+import { FaMap } from "react-icons/fa";
 import { Button, message } from "antd";
 
 const DEFAULT_EMPLOYEE_POSITION = [7.826249, 123.447];
