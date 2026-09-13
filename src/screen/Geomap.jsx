@@ -9,8 +9,10 @@ import {
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import "../App.css";
+import { FaMap, FaHouseUser } from "react-icons/fa";
+import { Button } from "antd";
 
-const DEFAULT_EMPLOYEE_POSITION = [7.826611, 123.4469];
+const DEFAULT_EMPLOYEE_POSITION = [7.826249, 123.447];
 //const SMS_RECIPIENT_NUMBER = "09530769905";
 
 function getDistanceInMeters(from, to) {
@@ -49,6 +51,7 @@ function Geomap() {
   const [contactno, setContactno] = useState("");
   const [meters, setMeters] = useState(100);
   const [loading, setLoading] = useState(true);
+  const [hide, setHide] = useState(false);
 
   useEffect(() => {
     const fetchLocation = async () => {
@@ -78,71 +81,107 @@ function Geomap() {
 
   return (
     <main className="map-page">
-      <section className="map-controls" aria-label="Map controls">
-        <label>
-          Employee ID
-          <input
-            name="employeeId"
-            type="text"
-            value={employeeId}
-            onChange={(event) => setEmployeeId(event.target.value)}
-            placeholder="Employee ID"
-          />
-        </label>
-        <label>
-          Mobile Number
-          <input
-            name="contactno"
-            type="number"
-            value={contactno}
-            onChange={(event) => setContactno(event.target.value)}
-            placeholder="Mobile Number"
-          />
-        </label>
-        <label>
-          Meters
-          <input
-            name="meters"
-            type="number"
-            min="1"
-            value={meters}
-            placeholder="Employee ID"
-          />
-        </label>
-        <label>
-          Meters
-          <input
-            name="meters"
-            type="number"
-            min="1"
-            value={meters}
-            onChange={(event) => setMeters(event.target.value)}
-          />
-        </label>
-
-        <div className="base-details">
-          <span>Main base</span>
-          {basePosition ? (
-            <strong>
-              {basePosition[0].toFixed(6)}, {basePosition[1].toFixed(6)}
-            </strong>
-          ) : (
-            <strong>No base selected</strong>
-          )}
-        </div>
-
-        {distanceFromBase !== null && hasRadius && (
-          <div
-            className={
-              isOutsideCircle ? "status status-alert" : "status status-ok"
-            }
+      {hide ? (
+        <section className="map-controls" aria-label="Map controls">
+          <label>
+            Guardian Name
+            <input
+              name="employeeId"
+              type="text"
+              value={employeeId}
+              onChange={(event) => setEmployeeId(event.target.value)}
+              placeholder="Guardian Name"
+            />
+          </label>
+          <label>
+            Mobile Number
+            <input
+              name="contactno"
+              type="number"
+              value={contactno}
+              onChange={(event) => setContactno(event.target.value)}
+              placeholder="Mobile Number"
+            />
+          </label>
+          <label>
+            Meters
+            <input
+              name="meters"
+              type="number"
+              min="1"
+              value={meters}
+              onChange={(e) => setMeters(e.target.value)}
+              placeholder="Employee ID"
+            />
+          </label>
+          <Button
+            type="default"
+            block
+            onClick={() => {
+              setHide(false);
+            }}
+            style={{
+              marginTop: "10px",
+              color: "red",
+              borderColor: "black",
+            }}
           >
-            {isOutsideCircle
-              ? "You're out of the circle."
-              : `Inside circle: ${Math.round(distanceFromBase)} meters from base.`}
+            SAVE AND UPDATE
+          </Button>
+          <Button
+            type="default"
+            block
+            onClick={() => {
+              setHide(false);
+            }}
+            style={{
+              marginTop: "10px",
+              color: "red",
+              borderColor: "black",
+            }}
+          >
+            HIDE
+          </Button>
+          <div className="base-details">
+            <span>Guardian Geolocation</span>
+            {basePosition ? (
+              <strong>
+                {basePosition[0].toFixed(6)}, {basePosition[1].toFixed(6)}
+              </strong>
+            ) : (
+              <strong>No base selected</strong>
+            )}
           </div>
-        )}
-      </section>
+
+          {distanceFromBase !== null && hasRadius && (
+            <div
+              className={
+                isOutsideCircle ? "status status-alert" : "status status-ok"
+              }
+            >
+              {isOutsideCircle
+                ? "You're out of the circle."
+                : `Inside circle: ${Math.round(distanceFromBase)} meters from base.`}
+            </div>
+          )}
+        </section>
+      ) : (
+        <section className="map-controls" aria-label="Map controls">
+          <div
+            className="flex items-center justify-between"
+            onClick={() => setHide(true)}
+          >
+            <div className="flex items-center gap-2">
+              <FaMap />
+              <p>Google Map Form</p>
+            </div>
+            <div className="flex items-center gap-1.5 bg-red-300 py-2 px-2 rounded-2xl">
+              <FaHouseUser size={15} />
+              <p className="text-black text-sm">Logout</p>
+            </div>
+          </div>
+        </section>
+      )}
 
       <MapContainer center={employeePosition} zoom={13} className="leaflet-map">
         <BaseLocationPicker onSelectBase={setBasePosition} />
@@ -164,7 +203,7 @@ function Geomap() {
             />
             <Marker position={basePosition}>
               <Popup>
-                Main Base
+                Guardian Geolocation
                 <br />
                 Lat: {basePosition[0].toFixed(6)}
                 <br />
