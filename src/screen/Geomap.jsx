@@ -11,6 +11,8 @@ import "leaflet/dist/leaflet.css";
 import "../App.css";
 import { FaMap } from "react-icons/fa";
 import { Button, message } from "antd";
+import "leaflet-defaulticon-compatibility";
+import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
 
 const DEFAULT_EMPLOYEE_POSITION = [7.826249, 123.447];
 //const SMS_RECIPIENT_NUMBER = "09530769905";
