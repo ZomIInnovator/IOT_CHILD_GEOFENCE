@@ -15,7 +15,6 @@ import "leaflet-defaulticon-compatibility";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
 
 const DEFAULT_EMPLOYEE_POSITION = [7.826249, 123.447];
-//const SMS_RECIPIENT_NUMBER = "09530769905";
 
 function getDistanceInMeters(from, to) {
   const earthRadiusInMeters = 6371000;
@@ -139,7 +138,7 @@ function Geomap() {
               borderColor: "black",
             }}
           >
-            SAVE AND UPDATE
+            SAVE AND UPDATES
           </Button>
           <Button
             type="default"
@@ -186,7 +185,7 @@ function Geomap() {
           >
             <div className="flex items-center gap-2">
               <FaMap />
-              <p>Google Map Form</p>
+              <p>Geolocation Map Form</p>
             </div>
             {/* <div className="flex items-center gap-1.5 bg-red-300 py-2 px-2 rounded-2xl">
               <FaHouseUser size={15} />
